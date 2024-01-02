@@ -19,5 +19,6 @@ Route::get('/', function () {
 Route::controller(\App\Http\Controllers\Login::class)->group(function () {
     Route::get('/login', 'show')->name('login');
     Route::post('/login', 'login');
+    Route::get('/confirm-password', 'showConfirmingPassword')->middleware(['auth', 'throttle:6,1']);
     Route::post('/confirm-password', 'confirmPassword')->middleware(['auth', 'throttle:6,1']);
 });
