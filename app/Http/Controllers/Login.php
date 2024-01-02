@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 
 class Login extends Controller
@@ -70,7 +73,7 @@ class Login extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|never
      */
-    function showResetPassword()
+    function showResetPasswordRequest()
     {
         if ($this->request->user()) {
             return abort(403, 'You\'ve been authenticated already');
@@ -78,14 +81,13 @@ class Login extends Controller
         return view('forgot-password');
     }
 
-    function resetPassword(): RedirectResponse
+    function resetPasswordRequest(): RedirectResponse
     {
         if ($this->request->user()) {
             return abort(403, 'You\'ve been authenticated already');
         }
         $this->request->validate(['email' => 'required|email']);
 
-        xdebug_break();
         $status = Password::sendResetLink(
             $this->request->only('email')
         );
@@ -97,5 +99,43 @@ class Login extends Controller
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
 
+    }
+
+    function showResetPassword(string $token = '')
+    {
+        if ($this->request->user()) {
+            return abort(403, 'You\'ve been authenticated already');
+        }
+        return view('reset-password', ['token' => $token]);
+    }
+
+    function resetPassword(): RedirectResponse
+    {
+        $data = $this->request->validate([
+            'token' => ['required', 'min:3'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'min:3', 'max:30', 'confirmed'],
+            'password_confirmation' => ['required', 'min:3', 'max:30']
+        ]);
+        if ($this->request->user()) {
+            return abort(403, 'You\'ve been authenticated already');
+        }
+
+        $status = Password::reset(
+            $data,
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 }
