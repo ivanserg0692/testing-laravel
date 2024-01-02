@@ -3,16 +3,13 @@
     /**
      * @var \Illuminate\Support\ViewErrorBag $errors
     */
-xdebug_break();
-echo '<pre>';
-var_export(old('password'));
-echo '</pre>';
+$commonErrors = $errors->get('errors');
 @endphp
 @section('body')
     <form method="post" name="login">
         @csrf
-        @if($errors->get('authorization'))
-            <div class="alert alert-danger">{{ $errors->get('authorization')['TEXT'] }}</div><br>
+        @if($commonErrors)
+            <div class="alert alert-danger">{{ end($commonErrors) }}</div><br>
         @endif
 
         <div class="input">

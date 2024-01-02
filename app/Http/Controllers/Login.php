@@ -133,9 +133,12 @@ class Login extends Controller
                 event(new PasswordReset($user));
             }
         );
+        if($status !== Password::PASSWORD_RESET) {
+            $this->request->flash();
+        }
 
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+            : back()->withErrors(['errors' => [__($status)]]);
     }
 }
