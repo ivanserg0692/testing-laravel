@@ -10,9 +10,9 @@
         @endif
 
         <div class="input">
-            <label for="login">Your email</label>
+            <label for="email-input">Your email</label>
 
-            <input id="login"
+            <input id="email-input"
                    type="email"
                    name="email"
                    value="{{old('email')}}"

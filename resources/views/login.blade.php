@@ -12,9 +12,9 @@
         @endif
 
         <div class="input">
-            <label for="login">Your login</label>
+            <label for="name-input">Your login</label>
 
-            <input id="login"
+            <input id="name-input"
                    type="text"
                    name="name"
                    value="{{old('name')}}"
@@ -25,9 +25,9 @@
             @enderror
         </div>
         <div class="input">
-            <label for="password">Your password</label>
+            <label for="password-input">Your password</label>
 
-            <input id="password"
+            <input id="password-input"
                    type="password"
                    name="password"
                    value="{{old('password')}}"

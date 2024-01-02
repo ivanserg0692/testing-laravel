@@ -10,9 +10,9 @@
         @endif
 
         <div class="input">
-            <label for="login">Your password's confirmation</label>
+            <label for="password-input">Your password's confirmation</label>
 
-            <input id="login"
+            <input id="password-input"
                    type="password"
                    name="password"
                    value="{{old('password')}}"
