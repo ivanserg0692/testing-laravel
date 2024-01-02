@@ -12,9 +12,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
-Route::get('/login', [\App\Http\Controllers\Login::class, 'show'])->name('login');
-Route::post('/login', [\App\Http\Controllers\Login::class, 'login'])->name('login');
+})->name('home')->middleware(['auth']);
+
+Route::controller(\App\Http\Controllers\Login::class)->group(function () {
+    Route::get('/login', 'show')->name('login');
+    Route::post('/login', 'login');
+    Route::post('/confirm-password', 'confirmPassword')->middleware(['auth', 'throttle:6,1']);
+});
