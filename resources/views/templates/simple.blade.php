@@ -36,6 +36,9 @@
                 </div>
 
                 <div class="mt-16">
+                    @section('messages')
+                        <x-messages :messages="session('header.messages')"></x-messages>
+                    @show
                     @section('body')default body
                     @show
                 </div>

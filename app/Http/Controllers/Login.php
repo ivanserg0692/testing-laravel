@@ -78,6 +78,9 @@ class Login extends Controller
         if ($this->request->user()) {
             return abort(403, 'You\'ve been authenticated already');
         }
+        if($status = $this->request->session()->get('status')) {
+            return view('message', ['text' => $status]);
+        }
         return view('forgot-password');
     }
 
@@ -105,6 +108,9 @@ class Login extends Controller
     {
         if ($this->request->user()) {
             return abort(403, 'You\'ve been authenticated already');
+        }
+        if($status = $this->request->session()->get('status')) {
+            return view('message', ['text' => $status]);
         }
         return view('reset-password', ['token' => $token, 'email' => $email]);
     }

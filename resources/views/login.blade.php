@@ -5,6 +5,9 @@
 */
 @endphp
 @section('body')
+    @if(session('status'))
+        <x-messages :messages="[['TEXT' => session('status')]]"></x-messages>
+    @endif
     <form method="post" name="login">
         @csrf
         @if($errors->get('authorization'))
