@@ -31,7 +31,7 @@ $commonErrors = $errors->get('errors');
             <input id="email-input"
                    type="email"
                    name="email"
-                   value="{{old('email')}}"
+                   value="{{old('email') ?: $email}}"
                    class="@error('email') is-invalid @enderror">
 
             @error('email')

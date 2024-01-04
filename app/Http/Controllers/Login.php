@@ -101,12 +101,12 @@ class Login extends Controller
 
     }
 
-    function showResetPassword(string $token = '')
+    function showResetPassword(string $token = '', string $email = '')
     {
         if ($this->request->user()) {
             return abort(403, 'You\'ve been authenticated already');
         }
-        return view('reset-password', ['token' => $token]);
+        return view('reset-password', ['token' => $token, 'email' => $email]);
     }
 
     function resetPassword(): RedirectResponse
