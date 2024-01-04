@@ -23,5 +23,7 @@
             @enderror
         </div>
         <button type="submit" name="submit" value="forgot-password">Submit</button>
+        |
+        <button type="submit" name="submit" value="to-login">Authorize</button>
     </form>
 @endsection
