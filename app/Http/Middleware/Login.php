@@ -22,6 +22,9 @@ class Login
         if ($request->submit === 'to-login') {
             return redirect()->route('login');
         }
+        if($request->captcha) {
+            $request->request->set('captcha', strtoupper($request->captcha));
+        }
         return $next($request);
     }
 }

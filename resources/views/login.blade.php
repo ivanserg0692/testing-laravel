@@ -40,6 +40,20 @@
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
+        <div class="input">
+            <label for="captcha-input">Enter a captcha code <br>
+                {!!captcha_img()!!}
+            </label>
+
+            <input id="captcha-input"
+                   type="input"
+                   name="captcha"
+                   class="@error('captcha') is-invalid @enderror">
+
+            @error('captcha')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
         <button type="submit" name="submit" value="login">Login</button>
         |
         <button type="submit" name="submit" value="to-forgot-password">I forgot my password</button>

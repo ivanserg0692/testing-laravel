@@ -33,8 +33,10 @@ class Login extends Controller
     {
         $credentials = $this->request->validate([
             'name' => ['required', 'min:3', 'max:30'],
-            'password' => ['required', 'min:3', 'max:30']
+            'password' => ['required', 'min:3', 'max:30'],
+            'captcha' => 'required|captcha'
         ]);
+        $credentials = array_intersect_key($credentials, array_flip(['name', 'password']));
         if (Auth::attempt($credentials)) {
             return redirect()->route('home');
         }
