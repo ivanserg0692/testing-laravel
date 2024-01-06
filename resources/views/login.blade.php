@@ -40,6 +40,7 @@
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
+        @if($captcha)
         <div class="input">
             <label for="captcha-input">Enter a captcha code <br>
                 {!!captcha_img()!!}
@@ -54,6 +55,7 @@
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
+        @endif
         <button type="submit" name="submit" value="login">Login</button>
         |
         <button type="submit" name="submit" value="to-forgot-password">I forgot my password</button>

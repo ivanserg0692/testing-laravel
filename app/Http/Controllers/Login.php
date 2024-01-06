@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,48 @@ use Illuminate\Support\Str;
 class Login extends Controller
 {
 
+    const LOGGING_ACTION = self::class . '::logging:';
+    const MAX_LOGGING_ATTEMPTS = 4;
+
     //
-    public function __construct(protected Request $request)
+    public function __construct(protected Request $request, protected RateLimiter $rateLimiter)
     {
+    }
+
+    protected function clearAttempts()
+    {
+        $this->rateLimiter->clear(static::LOGGING_ACTION . $this->request->ip());
+        if($user = $this->request->user()) {
+            $this->rateLimiter->clear(static::LOGGING_ACTION . $user->name);
+        }
+    }
+
+    protected function attempt(): bool
+    {
+        //There are two limiters, one which checks ip and other one checks a user's name
+        //if one of them is false, you need a captcha
+        $ipResult = ($this->rateLimiter->attempt(static::LOGGING_ACTION . $this->request->ip(),
+                static::MAX_LOGGING_ATTEMPTS, fn() => true, 60 * 60) !== false);
+        $userResult = true;
+        if ($this->request->name) {
+            $userResult = ($this->rateLimiter->attempt(static::LOGGING_ACTION . $this->request->name,
+                    static::MAX_LOGGING_ATTEMPTS, fn() => true, 60 * 60) !== false);
+        }
+        return $ipResult && $userResult;
+    }
+
+    protected function tooManyAttempts(): bool
+    {
+        //There are two limiters, one which checks ip and other one checks a user's name
+        //if one of them is true, you need a captcha
+        $ipResult = $this->rateLimiter->tooManyAttempts(static::LOGGING_ACTION . $this->request->ip(),
+                static::MAX_LOGGING_ATTEMPTS);
+        $userResult = false;
+        if ($this->request->name) {
+            $userResult = $this->rateLimiter->tooManyAttempts(static::LOGGING_ACTION . $this->request->name,
+                    static::MAX_LOGGING_ATTEMPTS);
+        }
+        return $ipResult || $userResult;
     }
 
     function show()
@@ -26,7 +66,7 @@ class Login extends Controller
         if ($this->request->user()) {
             return redirect('/')->withErrors(['authorization' => ['TEXT' => 'You are already authenticated']]);
         }
-        return view('login');
+        return view('login', ['captcha' => $this->tooManyAttempts()]);
     }
 
     function login(): RedirectResponse
@@ -34,10 +74,14 @@ class Login extends Controller
         $credentials = $this->request->validate([
             'name' => ['required', 'min:3', 'max:30'],
             'password' => ['required', 'min:3', 'max:30'],
-            'captcha' => 'required|captcha'
         ]);
+        if ($this->attempt() === false) {
+            $this->request->validate(['captcha' => 'required|captcha']);
+        }
+
         $credentials = array_intersect_key($credentials, array_flip(['name', 'password']));
         if (Auth::attempt($credentials)) {
+            $this->clearAttempts();
             return redirect()->route('home');
         }
         $this->request->flash();

@@ -25,7 +25,7 @@ Route::controller(\App\Http\Controllers\Login::class)->middleware([\App\Http\Mid
         Route::post('/forgot-password/reset/{token?}/{email?}', 'resetPassword');
 
 
-        Route::get('/forgot-password', 'showResetPasswordRequest')->name('password.forgot');
+        Route::get('/forgot-password', 'showResetPasswordRequest')->name('password.forgot')->middleware(['throttle:6,1']);
         Route::post('/forgot-password', 'resetPasswordRequest');
 
         Route::get('/confirm-password', 'showConfirmingPassword')->middleware(['auth', 'throttle:6,1']);
