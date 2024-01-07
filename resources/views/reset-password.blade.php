@@ -6,64 +6,21 @@
 $commonErrors = $errors->get('errors');
 @endphp
 @section('body')
-    <form method="post" name="login">
-        @csrf
-        @if($commonErrors)
-            <div class="alert alert-danger">{{ end($commonErrors) }}</div><br>
-        @endif
+    <x-centred-page>
+        <form method="post" name="login">
+            @csrf
+            @if($commonErrors)
+                <div class="alert alert-danger">{{ end($commonErrors) }}</div><br>
+            @endif
 
-        <div class="input">
-            <label for="login-input">Your resetToken</label>
+            <x-input-group name="token" label="Your resetToken" :value="old('token') ?: $token"></x-input-group>
+            <x-input-group name="email" label="Your email" :value="old('email') ?: $email"></x-input-group>
+            <x-input-group type="password" name="password" label="Your new password"
+                           :value="old('password')"></x-input-group>
+            <x-input-group type="password" name="password_confirmation" label="Your new password confirmation"
+                           :value="old('password_confirmation')"></x-input-group>
 
-            <input id="login-input"
-                   type="text"
-                   name="token"
-                   value="{{old('token') ?: $token}}"
-                   class="@error('token') is-invalid @enderror">
-
-            @error('token')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="input">
-            <label for="email-input">Your email</label>
-
-            <input id="email-input"
-                   type="email"
-                   name="email"
-                   value="{{old('email') ?: $email}}"
-                   class="@error('email') is-invalid @enderror">
-
-            @error('email')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="input">
-            <label for="password-input">Your new password</label>
-
-            <input id="password-input"
-                   type="password"
-                   name="password"
-                   value="{{old('password')}}"
-                   class="@error('password') is-invalid @enderror">
-
-            @error('password')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="input">
-            <label for="confirming-password-input">Your new password confirmation</label>
-
-            <input id="confirming-password-input"
-                   type="password"
-                   name="password_confirmation"
-                   value="{{old('password_confirmation')}}"
-                   class="@error('password_confirmation') is-invalid @enderror">
-
-            @error('password_confirmation')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <button type="submit" name="submit" value="reset-password">Submit</button>
-    </form>
+            <button type="submit" name="submit" value="reset-password">Submit</button>
+        </form>
+    </x-centred-page>
 @endsection

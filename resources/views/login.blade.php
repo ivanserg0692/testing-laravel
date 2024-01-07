@@ -4,12 +4,13 @@
  * @var \Illuminate\Support\ViewErrorBag $errors
 */
 @endphp
-@section('body')
-    @if(session('status'))
-        <x-messages :messages="[['TEXT' => session('status')]]"></x-messages>
-    @endif
-    <x-centred-page title="You need to authorize">
 
+
+@section('body')
+    <x-centred-page title="You need to authorize">
+        @if(session('status'))
+            <x-messages :messages="[session('status')]"></x-messages>
+        @endif
         <form method="post" name="login">
             @csrf
             @if($errors->get('authorization'))
@@ -18,7 +19,7 @@
 
 
             <x-input-group name="name" label="Your login" :value="old('name')"></x-input-group>
-            <x-input-group name="password" label="Your password" :value="old('password')"></x-input-group>
+            <x-input-group type="password" name="password" label="Your password" :value="old('password')"></x-input-group>
             @if($captcha)
                 <div class="input">
                     <label for="captcha-input">Enter a captcha code <br>
