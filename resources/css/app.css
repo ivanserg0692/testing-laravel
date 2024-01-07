@@ -1,2 +1,68 @@
-@import 'tailwindcss.css';
+/* Add some basic styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.navbar li {
+    margin: 0 10px;
+}
+
+.navbar li a {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar li a i {
+    margin-right: 5px;
+}
+
+.navbar li a:hover {
+    background-color: #111;
+}
+
+.login-block {
+    display: flex;
+    align-items: center;
+}
+
+.login-block .username {
+    margin-right: 10px;
+    color: #fff;
+}
+
+@media screen and (max-width: 600px) {
+    .navbar li {
+        width: 100%;
+        margin: 0;
+        text-align: center;
+    }
+
+    .navbar li a i {
+        margin-right: 0;
+    }
+
+    .login-block {
+        display: none;
+    }
+}
 
