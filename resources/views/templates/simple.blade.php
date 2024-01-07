@@ -52,7 +52,7 @@
                             @auth
                                 <div class="login-block btn-group">
                                     <a class="username btn btn-link">John Doe</a>
-                                    <a href="#" class="btn btn-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                    <a href="{{route('logout')}}" class="btn btn-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
                                 </div>
                             @else
                                 <div class="login-block btn-group">

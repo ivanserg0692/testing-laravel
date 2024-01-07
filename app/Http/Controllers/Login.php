@@ -69,6 +69,14 @@ class Login extends Controller
         return view('login', ['captcha' => $this->tooManyAttempts()]);
     }
 
+    function logout(): RedirectResponse
+    {
+        if($this->request->user()) {
+            Auth::logout();
+        }
+        return redirect()->back();
+    }
+
     function login(): RedirectResponse
     {
         $credentials = $this->request->validate([

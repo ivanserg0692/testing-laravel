@@ -18,8 +18,9 @@ Route::get('/', function () {
 
 Route::controller(\App\Http\Controllers\Login::class)->middleware([\App\Http\Middleware\Login::class])
     ->group(function () {
-        Route::get('/login', 'show')->name('login');
-        Route::post('/login', 'login');
+        Route::get('/login', 'show')->name('login')->middleware(['guest']);
+        Route::post('/login', 'login')->middleware(['guest']);
+        Route::any('/logout', 'logout')->name('logout')->middleware(['auth']);
 
         Route::get('/forgot-password/reset/{token?}/{email?}', 'showResetPassword')->name('password.reset');
         Route::post('/forgot-password/reset/{token?}/{email?}', 'resetPassword');
