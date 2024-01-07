@@ -19,6 +19,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                @auth()
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
@@ -41,6 +42,10 @@
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                     </li>
                 </ul>
+                @else
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                @endauth
                 <form class="d-flex">
                     @if (Route::has('login'))
                         <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10 ">

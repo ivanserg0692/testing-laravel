@@ -8,56 +8,37 @@
     @if(session('status'))
         <x-messages :messages="[['TEXT' => session('status')]]"></x-messages>
     @endif
-    <form method="post" name="login">
-        @csrf
-        @if($errors->get('authorization'))
-            <div class="alert alert-danger">{{ $errors->get('authorization')['TEXT'] }}</div><br>
-        @endif
+    <x-centred-page title="You need to authorize">
 
-        <div class="input">
-            <label for="name-input">Your login</label>
+        <form method="post" name="login">
+            @csrf
+            @if($errors->get('authorization'))
+                <div class="alert alert-danger">{{ $errors->get('authorization')['TEXT'] }}</div><br>
+            @endif
 
-            <input id="name-input"
-                   type="text"
-                   name="name"
-                   value="{{old('name')}}"
-                   class="@error('name') is-invalid @enderror">
 
-            @error('name')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="input">
-            <label for="password-input">Your password</label>
+            <x-input-group name="name" label="Your login" :value="old('name')"></x-input-group>
+            <x-input-group name="password" label="Your password" :value="old('password')"></x-input-group>
+            @if($captcha)
+                <div class="input">
+                    <label for="captcha-input">Enter a captcha code <br>
+                        {!!captcha_img()!!}
+                    </label>
 
-            <input id="password-input"
-                   type="password"
-                   name="password"
-                   value="{{old('password')}}"
-                   class="@error('password') is-invalid @enderror">
+                    <input id="captcha-input"
+                           type="input"
+                           name="captcha"
+                           class="@error('captcha') is-invalid @enderror">
 
-            @error('password')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        @if($captcha)
-        <div class="input">
-            <label for="captcha-input">Enter a captcha code <br>
-                {!!captcha_img()!!}
-            </label>
-
-            <input id="captcha-input"
-                   type="input"
-                   name="captcha"
-                   class="@error('captcha') is-invalid @enderror">
-
-            @error('captcha')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        @endif
-        <button type="submit" name="submit" value="login">Login</button>
-        |
-        <button type="submit" name="submit" value="to-forgot-password">I forgot my password</button>
-    </form>
+                    @error('captcha')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            @endif
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" name="submit" value="to-forgot-password" class="btn btn-link">I forgot my password</button>
+            </div>
+        </form>
+    </x-centred-page>
 @endsection
